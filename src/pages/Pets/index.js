@@ -32,6 +32,7 @@ const [pet, setPets] = useState([]);
                 })
                 .map((currentPet) => {
                 return <Card 
+                key={currentPet._id}
                 name={currentPet.name} 
                 gender={currentPet.gender} 
                 age={currentPet.age} 
