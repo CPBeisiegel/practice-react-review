@@ -1,0 +1,26 @@
+.card {
+    border: 5px solid red;
+    display: flex;
+    flex-direction: column;
+  
+  }
+  
+  .card_img {
+    width: 310px;
+    height: 300px;
+    display: block;
+  }
+  
+  @media screen and (min-width: 650px) {
+    .card {
+      border: 22px solid purple;
+      display: flex;
+      flex-direction: row;
+    }
+  
+    .card_img {
+      width: 610px;
+      height: 300px;
+      display: none;
+    }
+  }

@@ -5,6 +5,7 @@ export function Navbar(){
         <>
      <nav className="navbar navbar-expand-lg navbar-light bg-primary">
         <div className="container-fluid">
+        {/* O link serve para direcionar o usuário para uma rota especifica */}
           <Link className="navbar-brand text-light" style={{ textDecoration: "none" }}to="/">CatchAPet</Link>
           <button
             className="navbar-toggler"
@@ -20,6 +21,7 @@ export function Navbar(){
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
+              {/* Preenchemos o parametro de rota com o valor que vamos substitu-lo, que neste caso seria o dog, o cat ou o faleconosco */}
               <Link className="nav-link text-light" to="/pets/dog">
                   Cães
                 </Link>

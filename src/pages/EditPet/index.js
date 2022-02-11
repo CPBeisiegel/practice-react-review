@@ -1,12 +1,15 @@
 import { useState } from "react";
 import axios from "axios";
-// O navigate serve para redirecionarmos apos o submit do form 
-import {useNavigate} from "react-router-dom"
+import {useParams, useNavigate} from "react-router-dom"
+import {useEffect} from "react"
 
-export function PostNewPets() {
-    // Um formulário vai precisar de um state
-    const navigate = useNavigate()
-    /* Colocamos o useState para obter as informações do formulário e posteriormente atualiza-las com o uso do setForm  */
+export function EditPet() {
+    
+    const params = useParams();
+    const navigate = useNavigate();
+
+
+
     const [form, setForm] = useState({
         name: "",
         species: "",
@@ -16,32 +19,47 @@ export function PostNewPets() {
         img: "",
     })
 
-    /* A função handleChange foi criada para pegarmos os elementos inseridos no formulário apartir do event.target, que pega o input e o seu valor inserido na hora do cadastro */
+    useEffect(() => {
+        async function fetchPet() {
+            try {
+              const response = await axios.get(`https://ironrest.herokuapp.com/catchapet/${params.id}`);
+                setForm({...response.data})
+            } catch (error) {
+              console.error(error);
+            }
+          }
+
+          fetchPet()
+    },[])
+
+   
     function handleChange(event) {
         setForm({...form, [event.target.name]: event.target.value})
     }
-    /* A função handleSubmit tem como objetivo pegar as informações colocadas no formulário e envia-las para a api através do uso do axios.post */
-    async function handleSubmit(event){
+   
+    function handleSubmit(event){
         event.preventDefault()
-        /* Usamos um for in para verificar se nenhum dos campos está sendo enviado vazio, isso ajuda a não permitir que um dado vazio ou incompleto seja inserido na api e a quebre */
+        
         for(let key in form){
             if (!form[key]) {
                 window.alert(`Gentileza preencher o campo ${key} corretamente`);
                 return;
               }
         }
-        /* Para cadastrar as informações do form, usamos o método http post juntamente com o axios. Diferentemente do get, precisamos passar os endpoints da api que precisamos preencher */
-        try{
-            await axios.post("https://ironrest.herokuapp.com/catchapet", form)
-            // Ele acontece depois da ação do axios ocorrer após o envio das informações ter acontecido
-            navigate(`/pets/${form.species.toLowerCase()}`)
-
-        } catch(error){
-            console.error(error);
-        }
+        
+        console.log("Não caiu no if")
+        /* Inserimos esse comando para deletar o id do form antes de editarmos a valor dentro do formulário e envia-lo para a api */
+        delete form._id;
+        /* Antes de passarmos o update precisamos remover o id pois ele não pode ser atualizado devido a ação default do put, se não fizermos isso vai dar um erro 500 */
+        axios
+        .put(`https://ironrest.herokuapp.com/catchapet/${params.id}`, form)
+        .then((result) => navigate(`/pets/${form.species.toLowerCase()}`))
+        .catch((error) => {
+          console.error(error);
+        });
     }
 
-    /* Pegando sempre o nome dos campos dos elementos que queremos enviar para a nossa api (form.value) */
+   
 
     return (
         <form onSubmit={handleSubmit}>
@@ -54,6 +72,7 @@ export function PostNewPets() {
                 value={form.name}
                 onChange={handleChange}
             />
+
             <p>Especie:</p>
             <label htmlFor="dog">Cão</label>
             <input
@@ -61,6 +80,7 @@ export function PostNewPets() {
                 name="species"
                 value="Dog"
                 type="radio"
+                checked={form.species === "Dog" ? true : false}
                 onChange={handleChange}
             />
             <label htmlFor="cat">Gato</label>
@@ -68,15 +88,18 @@ export function PostNewPets() {
                 id="cat"
                 name="species"
                 value="Cat"
+                checked={form.species === "Cat" ? true : false}
                 type="radio"
                 onChange={handleChange}
             />
+
             <p>Genero:</p>
             <label htmlFor="male">Male</label>
             <input
                 id="male"
                 name="gender"
                 value="Male"
+                checked={form.gender === "Male" ? true : false}
                 type="radio"
                 onChange={handleChange}
             />
@@ -85,9 +108,11 @@ export function PostNewPets() {
                 id="female"
                 name="gender"
                 value="Female"
+                checked={form.gender === "Female" ? true : false}
                 type="radio"
                 onChange={handleChange}
             />
+
             <label htmlFor="age">Idade:</label>
             <input 
                 id="age" 
@@ -100,7 +125,7 @@ export function PostNewPets() {
             <input
                 id="favoriteToy"
                 name="favoriteToy" 
-                value={form.favorite} 
+                value={form.favoriteToy} 
                 onChange={handleChange} 
             />
             <label htmlFor="img">Link da foto:</label>
@@ -115,7 +140,3 @@ export function PostNewPets() {
     )
   }
   
-
-  
-// CRUD - CREATE, READ, UPDATE and DELETE
-// 1 CRUD COMPLETO

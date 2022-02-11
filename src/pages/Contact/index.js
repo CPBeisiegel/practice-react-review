@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 export function Contact() {
   return (
+    /* Sempre lembrar de colocar as duas {{}} para inserir elementos de style dentro do jsx */
     <div className="card" style={{ width: "18rem" }}>
       <div className="card-body">
         <h5 className="card-title">Catch A Pet</h5>
@@ -17,6 +18,7 @@ export function Contact() {
           </a>
         </p>
         <p>
+        {/* Usamos o link as inves da tag a para colocar os elementos na rota designada. Sempre lembrar de colocar o to com a rota que foi definida no App.js  */}
           <Link to="/pets/dog" className="card-link">
             Cães para adoção
           </Link>
